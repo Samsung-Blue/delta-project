@@ -1,0 +1,31 @@
+#register{
+	height: 470px;
+	border: 2px solid black;
+	width: 500px;
+	position: absolute;
+	margin-top: 50px;
+	margin-left: 50px;
+}
+h2{
+	margin-left: 10px;
+}
+h4{
+	margin-left: 10px;
+	display: inline-block;
+}
+input{
+	margin-left: 10px;
+}
+#login{
+	height: 300px;
+	width: 400px;
+	margin-left: 650px;
+	position: absolute;
+	margin-top: 50px;
+	border: 2px solid black;
+}
+body{
+	background-image: url("/images/background.jpg");
+	background-size: cover;
+	background-repeat: repeat;
+}
