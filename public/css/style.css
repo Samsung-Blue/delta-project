@@ -29,3 +29,15 @@ body{
 	background-size: cover;
 	background-repeat: repeat;
 }
+#register p{
+	color:#990099;
+	font-size: 18px;
+	font-family: candara;
+	margin-left:10px;
+}
+#login p{
+	color:#990099;
+	font-size: 18px;
+	font-family: candara;
+	margin-left:10px;
+}

@@ -6,14 +6,32 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
-var userConnected;
+var userConnected,connected=1;
+var users=[];
 
 io.on('connection',function(socket){
 	console.log("User connected");
-	socket.emit('users',userConnected);
+	var flag=-1;
+	for(i=0;i<users.length;i++)
+	{
+		if(userConnected==users[i])
+			flag=0;
+	}
+	if(flag==-1)
+	   users.push(userConnected);
+	socket.emit('online',userConnected);
+	connected=1;
+	io.emit('users',userConnected,users,connected);
 	connection.query('SELECT * FROM posts',function(err,rows){
-		for(i=0;i<rows.length;i++){
+		if(rows.length>6){
+			for(i=(rows.length-5);i<rows.length;i++){
+			    socket.emit('previous',rows[i].username,rows[i].tweets);
+			}
+		}
+		else{
+			for(i=0;i<rows.length;i++){
 			socket.emit('previous',rows[i].username,rows[i].tweets);
+	    }
 		}
 	});
 	socket.on('chat message',function(username,message){
@@ -28,6 +46,16 @@ io.on('connection',function(socket){
 				console.log(err);
 		});
 		io.emit('chat message',username,message);
+	});
+	socket.on('disconnecting',function(username){
+        for(i=0;i<users.length;i++)
+        {
+        	if(username==users[i])
+        		var pos=i;
+        }
+        users.splice(pos,1);
+        connected=0;
+		io.emit('users',username,users,connected);
 	});
 	socket.on('disconnect',function(){
 		console.log("User disconnected");
@@ -47,6 +75,8 @@ app.use(bodyParser());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
 connection.connect(function(err){
 	if(err)
@@ -89,10 +119,11 @@ app.post('/',function(req,res){
 	    connection.query('INSERT INTO users SET ?',post,function(err){
 	    	if(err)
 	    		console.log("Error in inserting row");
-	    	else
+	    	else{
 	    		console.log("Row inserted");
+	    		res.render('index',{string:"Registered!! Login to Broadcast your thoughts",message:""});
+	    	}
 	    });
-	    displayIndex(req,res);
 	}
 });
 
@@ -102,7 +133,7 @@ app.post('/join',function(req,res){
 			sendMessages(req,res,req.body.userlogin);
 		}
 		else{
-			res.end("Username or password is incorrect");
+			res.render('index',{string:"",message:"Username or Password is incorrect"});
 		}
 	});
 });
@@ -110,21 +141,21 @@ app.post('/join',function(req,res){
 function validate(post,confirm,res){
 	if(post.username===""||post.password===""||post.email==="")
 	{
-		res.end("Fields should not be empty");
+		res.render('index',{string:"Fields should not be empty",message:""});
 		return false;
 	}
 	connection.query('SELECT * FROM users',function(err,rows,fields){
 		for(i=0;i<rows.length;i++){
 			if(rows[i].username===post.username)
 			{
-				res.end("Username should be unique");
+				res.render('index',{string:"Username should be unique. Try entering another username",message:""});
 				return false;
 			}
 		}
 	});
     if(confirm!==post.password)
     {
-    	res.end("Check Password");
+    	res.render('index',{string:"Check the password",message:""});
     	return false;
     }
     return true;
@@ -132,7 +163,7 @@ function validate(post,confirm,res){
 
 function displayIndex(req,res)
 {
-	res.sendFile(__dirname+'/index.html');
+	res.render('index',{string:"",message:""});
 }
 
 function sendMessages(req,res,username){

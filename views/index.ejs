@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Register</title>
+		<link href="http://localhost:8081/css/style.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+	    <h1 style="color:#990099; margin-left: 20px; font-family:candara;">Facepalm</h1>
+	    <h3 style="color:#999999; font-family:Monotype Corsiva; margin-left: 20px; margin-top:-10px;">Broadcast your thoughts</h3>
+	    <div id="register">
+		<form method="post" action="/">
+			<h2>New here ? Register !</h2>
+			<h4>Username :</h4><input autocomplete="off" type="text" placeholder="Username" name="user" style="height:20px;"/>
+			<br>
+			<h4>Password :</h4><input autocomplete="off" type="password" placeholder="Password" name="password" style="height:20px;"/>
+			<br>
+			<h4>Confirm :</h4><input autocomplete="off" type="password" placeholder="Confirm Password" name="confirm" style="height:20px;"/>
+			<br>
+			<h4>Email :</h4><input autocomplete="off" type="email" placeholder="Email" name="email" style="height:20px;"/>
+			<br>
+			<br>
+			<input type="submit" name="join" value="Join" style="height:40px;width:80px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara;"/>
+		</form>
+		<p><%= string %></p>
+		</div>
+		<div id="login">
+		<form method="post" action="/join">
+			<h2>Login</h2>
+			<h4>Username :</h4><input autocomplete="off" type="text" placeholder="Username" style="height:20px;" name="userlogin"/>
+			<br>
+			<h4>Password :</h4><input autocomplete="off" type="password" placeholder="Password" style="height:20px;" name="passlogin"/>
+			<br>
+			<br>
+		    <input type="submit" name="login" value="Login" style="height:40px;width:80px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer;font-family:candara;"/>
+		</form>
+		<p><%= message %></p>
+		</div>
+	</body>
+</html>

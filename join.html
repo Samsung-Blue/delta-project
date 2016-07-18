@@ -37,6 +37,20 @@
 			color: #800000;
 			margin-top:5px;
 		}
+		#users{
+			height:200px;
+			width:200px;
+			margin-left: 900px;
+			border: 2px solid black;
+			overflow: auto;
+			margin-top:-450px;
+		}
+		#users p{
+			color: blue;
+			font-family: candara;
+			font-size:18px;
+			margin-left: 10px;
+		}
 	</style>
 </head>
 <body>
@@ -49,13 +63,14 @@
 		<input id="tweet" autocomplete="off" style="height:20px;margin-left:300px;"/>
 		<button style="height:40px;width:80px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara;">Send</button>
 	</form>
+	<div id="users"></div>
 	<script src="./socket.io/socket.io.js"></script>
 	<script src="./javascript/jquery-1.12.4.js"></script>
 	<script>
 		var socket = io.connect('http://localhost:8081');
-		var username;
+		var userName;
 		$('form').submit(function(){
-			socket.emit('chat message',username,$('#tweet').val());
+			socket.emit('chat message',userName,$('#tweet').val());
 			$('#tweet').val('');
 			return false;
 		});
@@ -77,9 +92,20 @@
 			$("div").removeClass('change');
 			},100);
 		});
-		socket.on('users',function(userConnected){
-			username = userConnected;
-			$('#messages').append("<p>"+userConnected+" has connected "+"</p>");
+		socket.on('users',function(userConnected,users,connected){
+			$("p").remove(".online");
+			if(connected==1){
+			   $('#messages').append("<p>"+userConnected+" has connected "+"</p>");
+		    }
+		    for(i=0;i<users.length;i++)
+			   $("#users").append('<p class="online">'+users[i]+'</p>');
+		});
+		socket.on('online',function(userConnected){
+			userName = userConnected;
+			$("#users").append('<p style="size:22px;">Online:</p>');
+		});
+		$("#logout").click(function(){
+			socket.emit('disconnecting',userName);
 		});
 	</script>
 </body>
