@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+	<title>Login</title>
+	<style>
+		body{
+			background-image: url('/images/background.jpg');
+			background-size: cover;
+			background-repeat: repeat;
+		}
+		#group{
+			border: 2px solid black;
+			margin-top: 10px;
+			height: 400px;
+			width: 400px;
+			overflow: auto;
+		}
+		#joining{
+			border: 2px solid black;
+			margin-top: 20px;
+			height: 220px;
+			width: 400px;
+		}
+		#group p{
+			color:#990099;
+			font-size: 20px;
+			font-family: candara;
+		}
+		#messages{
+			position: absolute;
+			border: 2px solid black;
+			margin-left: 500px;
+			margin-top: -570px;
+			height: 300px;
+			width: 300px;
+			overflow: auto;
+		}
+		#messages p{
+			color:#990099;
+			font-size: 20px;
+			font-family: candara;
+			margin-left: 10px;
+		}
+		#add{
+			position: absolute;
+			margin-left: 500px;
+			margin-top: -230px;
+			height: 200px;
+			width: 250px;
+			border: 2px solid black;
+		}
+		#add p{
+			color:#990099;
+			font-size: 20px;
+			font-family: candara;
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+    <div id="joining">
+    	<a href="http://localhost:8081/addgroup" style="text-decoration: none"><div style="height:40px;width:180px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara; margin-top: 20px;margin-left: 10px; text-align: center; padding-top: 10px;">Add Group</div></a>
+    	<a href="http://localhost:8081/joingroup" style="text-decoration: none"><div style="height:40px;width:180px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara; margin-top: 10px; margin-left: 10px;text-align: center;padding-top: 10px;">Join Group</div></a>
+    	<a href="http://localhost:8081/join" style="text-decoration: none"><div style="height:40px;width:180px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara; margin-top: 10px; margin-left: 10px;text-align: center;padding-top: 10px;">Check Messages</div></a>
+    </div>
+    <div id="group"></div>
+    <a href="http://localhost:8081" style="text-decoration:none;"><div style="height:40px;width:180px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara; margin-top: -640px; margin-left: 700px;text-align: center;padding-top: 10px; position: absolute;" id="logout">Logout</div></a>
+    <div id="messages"><p>Notifications:</p></div>
+    <div id="add">
+        <form method="post" action="/addmember">
+        	<input autocomplete="off" type="text" placeholder="Add user" name="user" style="height:20px; margin-left: 10px;margin-top: 10px;"/>
+        	<input autocomplete="off" type="text" placeholder="Group name" name="group" style="height:20px; margin-left: 10px; margin-top: 10px;"/>
+        	<input type="submit" name="add" value="Add Member" style="height:40px;width:140px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara;margin-top: 10px;"/>
+        </form>
+        <p><%= member%></p>
+    </div>
+	<script src="./socket.io/socket.io.js"></script>
+	<script src="./javascript/jquery-1.12.4.js"></script>
+	<script>
+		var socket = io.connect('http://localhost:8081');
+		var userConnected;
+		socket.on('check',function(username,noOfGroups,usergroups){
+			userConnected=username;
+			if(noOfGroups==0)
+			{
+				$('#group').append("<p>You are not a part of any group yet</p>");
+			}
+			else
+			{
+				$('#group').append('<p>You are a part of </p>');
+				for(i=0;i<usergroups.length;i++)
+					$('#group').append('<p class="group">'+usergroups[i]+'</p>');
+			}
+
+		});
+		socket.on('notif',function(username,groupname){
+			$('#messages').append('<p>'+username+' wants to join '+groupname+'</p>');
+		});
+		$('#logout').click(function(){
+			socket.emit('disconnecting',userConnected);
+		});
+	</script>
+</body>

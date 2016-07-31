@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+	<title>Login</title>
+	<style>
+		body{
+			background-image: url('/images/background.jpg');
+			background-size: cover;
+			background-repeat: repeat;
+		}
+		#group{
+			border: 2px solid black;
+			margin-top: 10px;
+			height: 400px;
+			width: 400px;
+		}
+		#joining{
+			border: 2px solid black;
+			margin-top: 20px;
+			height: 120px;
+			width: 400px;
+		}
+		#group p{
+			color:#990099;
+			font-size: 20px;
+			font-family: candara;
+		}
+	</style>
+</head>
+<body>
+    <div id="joining">
+    	<a href="http://localhost:8081/addgroup" style="text-decoration: none"><div style="height:40px;width:180px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara; margin-top: 20px;">Add Group</div></a>
+    	<div style="height:40px;width:180px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara;">Join Group</div>
+    </div>
+    <div id="group"></div>
+	<script src="./socket.io/socket.io.js"></script>
+	<script src="./javascript/jquery-1.12.4.js"></script>
+	<script>
+		var socket = io.connect('http://localhost:8081');
+		socket.on('check',function(username,noOfGroups,usergroups){
+			if(noOfGroups==0)
+			{
+				$('#group').append("<p>You are not a part of any group yet</p>");
+			}
+			else
+			{
+				$('#group').append('<p>You are a part of </p>');
+				for(i=0;i<usergroups.length;i++)
+					$('#group').append('<p class="group">'+usergroups[i]+'</p>');
+			}
+
+		});
+	</script>
+</body>

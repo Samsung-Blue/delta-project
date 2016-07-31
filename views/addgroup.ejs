@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+	<title>Add Group</title>
+	<style>
+	body{
+		background-image: url('/images/background.jpg');
+			background-size: cover;
+			background-repeat: repeat;
+		}
+    #register{
+			height: 470px;
+			border: 2px solid black;
+			width: 500px;
+			position: absolute;
+			margin-top: 50px;
+			margin-left: 50px;
+			overflow: auto;
+		}
+		h2{
+			margin-left: 10px;
+		}
+		h4{
+			margin-left: 10px;
+			display: inline-block;
+		}
+		#register p{
+			color:#990099;
+			font-size: 20px;
+			font-family: candara;
+		}
+		h3{
+			display: inline-block;
+			margin-left: 10px;
+		}
+		#users{
+			height: 300px;
+			border: 2px solid black;
+			width: 300px;
+			position: absolute;
+			margin-top: 100px;
+			margin-left: 700px;
+			overflow: auto;
+		}
+		#users p{
+			color:#990099;
+			font-size: 20px;
+			font-family: candara;
+		}
+	</style>
+</head>
+<body>
+    <h1 style="color:#990099; margin-left: 20px; font-family:candara;">Facepalm</h1>
+	<h3 style="color:#999999; font-family:Monotype Corsiva; margin-left: 20px; margin-top:-10px;">Broadcast your thoughts</h3>
+	<div id="register">
+		<form method="post" action="/addgroup">
+		    <div id="add">
+			<h4>Group Name :</h4><input autocomplete="off" type="text" placeholder="Group Name" name="group" style="height:20px;margin-left: 10px;"/>
+			<br>
+			<h4>Add User :</h4><h3>+</h3><input autocomplete="off" type="text" placeholder="Add user" name="user" style="height:20px; margin-left: 10px;"/>
+			</div>
+			<input type="submit" name="add" value="Create Group" style="height:40px;width:140px;color:black; background-color:orange;border-radius:5px; font-size:18px;cursor:pointer; font-family:candara;"/>
+		</form>
+		<p><%= message%></p>
+	</div>
+	<!--<div id="users"><p><%= users%></p></div>-->
+	<script src="./javascript/jquery-1.12.4.js"></script>
+	<script>
+		$('h3').click(function(){
+			$('#add').append('<input autocomplete="off" type="text" placeholder="Add user" name="user" style="height:20px;"/>');
+		});
+	</script>
+</body>
